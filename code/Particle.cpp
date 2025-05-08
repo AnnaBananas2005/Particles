@@ -1,3 +1,12 @@
+#include "Engine.h"
+#include <SFML/Graphics.hpp>
+#include "Particle.h"
+
+using namespace sf;
+using namespace std;
+
+//Done by Anna :3
+
 /*
 Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition)
 This constructor will be responsible for generating a randomized shape with numPoints vertices,  
@@ -48,7 +57,35 @@ The algorithm is as follows:
             m_A(0, j) = m_centerCoordinate.x + dx;
             m_A(1, j) = m_centerCoordinate.y + dy;
         Increment theta by dTheta to move it to the next location for the next iteration of the loop
-        
+*/
+Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) {
+    m_ttl = TTL;
+    m_numPoints = numPoints;
+    float randomNumber = static_cast<float>(rand())/(RAND_MAX) /
+    m_radiansPerSec = randomNumber * PI;
+
+    m_cartesianPlane.setCenter(0, 0);
+    m_cartesianPlane.setSize(target.getSize().x, -1.0 * target.getSize().y);
+    m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane); 
+    m_vx = rand() % 401 + 100; //Can be between whatever number (100-500)
+    m_vy = rand() % 401 + 100; 
+    m_color1 = Color::White;
+    m_color2 = Color(rand() % 256, rand() % 256, rand() % 256);
+
+    theta = rand() % PI / 2;
+    dTheta = 2 * PI / (numPoints - 1);
+    float r, dx, dy;
+    for (int j = 0; j < numPoints; j++) {
+        r = rand() % 21 + 20; //20-40
+        dx = r * cos(theta);
+        dy = r * sin(theta);
+        m_A(0, j) = m_centerCoordinate.x + dx;
+        m_A(1, j) = m_centerCoordinate.y + dy;
+        theta += dTheta;
+    }
+}
+
+/*
 draw(RenderTarget& target, RenderStates states) const
 This function overrides the virtual function from sf::Drawable to allow our draw function to polymorph
 To draw, we will convert our Cartesian matrix coordinates from m_A to pixel coordinates in a VertexArray of primitive type TriangleFan
@@ -77,7 +114,23 @@ Loop j from 1 up to and including m_numPoints
     Assign lines[j].color with m_Color2
 When the loop is finished, draw the VertexArray:
     target.draw(lines)
+*/
 
+void draw(RenderTarget& target, RenderStates states) const {   
+    VertexArray lines(TriangleFan, numPoints + 1); 
+    Vector2f center = target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane); 
+
+    lines[0].position = center;
+    lines[0].color = m_color;
+
+    for (int j = 1; j <= m_numPoints; j++) {
+        lines[j].position = target.mapCoordsToPixel(Vector2f(m_A(0, j - 1), m_cartesianPlane)); //fix
+        lines[j].color = m_Color2;
+    }
+    target.draw(lines, states); 
+}
+
+/*
 update(float dt)
 Subtract dt from m_ttl
 Note:  the functions rotate, scale, and translate will be defined later
@@ -94,14 +147,38 @@ Next we will calculate how far to shift / translate our particle, using distance
     Subtract G * dt from m_vy
     Assign m_vy * dt to dy
     Call translate using dx,dy as arguments
-    
+*/
+
+void update(float dt) { 
+    m_ttl -= dt; 
+    rotate(dt * m_radiansPerSec);
+    scale(SCALE);   
+
+    float dx, dy;
+    dx = m_vx * dt;
+    m_vy -= G * dt; 
+    dy = m_vy * dt;
+
+    translate(dx, dy);
+}
+  
+/*
 translate(double xShift, double yShift)
 Construct a TranslationMatrix T with the specified shift values xShift and yShift
 Add it to m_A as m_A = T + m_A
 Update the particle's center coordinate:
     m_centerCoordinate.x += xShift;
     m_centerCoordinate.y += yShift;
+ */
+
+translate(double xShift, double yShift) {
+    TranslationMatrix T(xShift, yShift);
+    T += m_A;
+    m_centerCoordinate.x += xShift;
+    m_centerCoordinate.y += yShift;
+}
     
+/*
 rotate(double theta)
 Since the rotation matrix we will use is algebraically derived to rotate coordinates about the origin,
 we will temporarily shift our particle to the origin before rotating it
@@ -114,7 +191,17 @@ Multiply it by m_A as m_A = R * m_A
       it multiplies the lvalue's rows into the rvalue's columns.
 Shift our particle back to its original center:
     translate(temp.x, temp.y);
-    
+*/
+
+void rotate(double theta) {
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
+    RotationMatrix R(theta);
+    m_A = R * m_A;                  
+    translate(temp.x, temp.y);
+}
+
+/*
 scale(double c)
 Scaling is also derived to scale coordinates relative to their distance from the origin.  
 So we will also have to temporarily shift back to the origin here before scaling:
@@ -126,6 +213,18 @@ Multiply it by m_A as m_A = S * m_A
 Shift our particle back to its original center:
     translate(temp.x, temp.y);
     
+
+*/
+
+void scale(double c) {
+    m_centerCoordinate = Vector2f temp;     
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y); 
+    ScalingMatrix S(c);   
+    m_A = S * m_A;           
+    translate(temp.x, temp.y);
+}
+
+/*
 almostEqual and unitTests
 Copy these from the starter code given above. 
 Make sure to call unitTests from Engine::run as you go so you can check your progress
