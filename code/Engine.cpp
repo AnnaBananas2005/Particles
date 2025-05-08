@@ -1,60 +1,101 @@
-/*
+#include "Engine.h"
+#include <SFML/Graphics.hpp>
+#include "Particle.h"
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Time.hpp>
+#include "particle.cpp"
+using namespace sf;
+using namespace std;
+//Done by Fernanda :D
 
-Engine()
-Call create on m_Window to populate the RenderWindow member variable
-You can assign a custom resolution or you can call VideoMode::getDesktopMode() to get the screen resolution
+RenderWindow m_Window;
+vector<Particle> m_particles;
 
-run()
-Construct a local ClockLinks to an external site. object to track TimeLinks to an external site. per frame
-    The time differential (dt) since the last frame will be passed into update
-Construct a local Particle to be used for the unit tests.  
-The tests will be given to you, and you can use them to check your progress as you go. 
-Use the following code exactly:
-    cout << "Starting Particle unit tests..." << endl;
-    Particle p(m_Window, 4, { (int)m_Window.getSize().x / 2, (int)m_Window.getSize().y / 2 });
-    p.unitTests();
-    cout << "Unit tests complete.  Starting engine..." << endl;
-    
-After the unit tests are complete, create your game loop
-Loop while m_Window is open
-    Restart the clock (this will return the time elapsed since the last frame)
-    Convert the clock time to seconds
-    Call input
-    Call update
-    Call draw
-    
-input()
-Poll the Windows event queue
-  Handle the Escape key pressed and closed events so your program can exit
-  Handle the left mouse button pressed event
-      Create a loop to construct 5 particles (I used 5, you can change this if you want)
-          The numPoints parameter in the Particle constructor is a random number in the range [25:50]
-              You can experiment with the range on this number
-              It will determine the number of vertices in each particle
-          Pass the position of the mouse click into the Particle constructor so it has a starting position
-          
-update(float dtAsSeconds)
-The general idea here is to loop through m_particles and call update on each Particle in the vector whose ttl (time to live) has not expired
-    If a particle's ttl has expired, it must be erased from the vector
-This is best done with an iterator-based for-loop
-    Don't automatically increment the iterator for each iteration
-    if getTTL() > 0.0
-        Call update on that Particle
-            Pass in the time differential since the last frame (dt)
-        increment the iterator
-    else
-        erase the element the iterator points to
-        erase returns an iterator that points to the next element after deletion, or end if it is the end of the vector
-            Assign the iterator to this return value
-        Do not increment the iterator (if you do you might increment past the end of the vector after you delete the last element)
-        
-draw()
-  clear the window
-  Loop through each Particle in m_Particles
-      Pass each element into m_Window.draw()
-      Note:  This will use polymorphism to call your Particle::draw() function
-  display the window
+Engine::Engine()
+{
+  create(m_Window);
+  VideoMode::getDesktopMode(1980,1080);
+}
 
+void Engine::run()
+{
+  Clock clock;
+  Time time1 = clock.getElapsedTime();
+  
+  cout << "Starting Particle unit tests..." << endl;
+  Particle p(m_Window, 4, { (int)m_Window.getSize().x / 2, (int)m_Window.getSize().y / 2 });
+  p.unitTests();
+  cout << "Unit tests complete.  Starting engine..." << endl;
 
+  while(m_Window.isOpen)
+    {
+      clock.restart();
+      float sec = time1.asSeconds();
+      p.input();
+      p.update(sec);
+      p.draw();
+    }
+}
 
-*/
+void Engine::input()
+{
+  Event event;
+  
+  while(m_window.pollEvent(event))
+  {
+      if(event.type == Event::Closed)
+      {
+          m_window.close();
+      }
+  
+      if(event.type == Event::MouseButtonPressed)
+      {
+          if(event.mouseButton.button == Mouse::Left)
+          {
+              for(int i = 0; i < 5; i++)
+              {
+                m_numPoints = rand() % 26 + 25;
+                Particle particle; 
+                particle.position = sf::Vector2f(event.mouseButton.x,event.mouseButton.y);
+                m_particle.push_back(particle);
+                
+              }
+          }
+      }
+      if (Keyboard::isKeyPressed(Keyboard::Escape))
+      {
+          m_window.close();
+      }
+  
+  } 
+}
+
+void Engine::update(float dtAsSeconds)
+{
+  for(int i = 0; i < m_particles)
+    {
+      if(m_particles[i].getTTL() > 0.0)
+      {
+        m_particles[i].update(dt);
+        i++;
+      }
+      else
+      {
+        m_particles.erase(i);
+        return i++; //don't know if this would work
+        //DO NOT increment
+      }
+    }
+}
+
+void Endgine::draw()
+{
+  m_window.clear();
+  //using this for loop would keep the vector the same and not change any of the info in the vector
+  for(const auto& Particle : m_particles)
+    {
+      //Will go through each particle in the vector and put it in m_window.draw where it will call the Particle draw function
+      m_Window.draw(Particles);
+    }
+  m_window.display();
+}
