@@ -72,7 +72,7 @@ Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) {
     m_color1 = Color::White;
     m_color2 = Color(rand() % 256, rand() % 256, rand() % 256);
 
-    theta = rand() % PI / 2;
+    float theta = rand() / (PI / 2);    //May have to fix this
     dTheta = 2 * PI / (numPoints - 1);
     float r, dx, dy;
     for (int j = 0; j < numPoints; j++) {
