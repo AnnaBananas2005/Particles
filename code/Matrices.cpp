@@ -104,21 +104,18 @@ namespace Matrices
 
 
     RotationMatrix::RotationMatrix(double theta) : Matrix(2,2){
-        //something
         a[0][0] = cos(theta);
         a[0][1] = -sin(theta);
         a[1][0] = sin(theta);   
         a[1][1] = cos(theta);
     }
     ScalingMatrix::ScalingMatrix(double scale) : Matrix(2,2){
-        //something
         a[0][0] = scale;
         a[0][1] = 0.0;
         a[1][0] = 0.0;     
         a[1][1] = scale;
     }
     TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols) : Matrix(2,2){
-        //something
         for (int i = 0; i < nCols; i++){
             a[0][i] = xShift;
             a[1][i] = yShift;
