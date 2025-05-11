@@ -102,7 +102,7 @@ namespace Matrices
         return os;
     }
 
-
+//Done by Anna
     RotationMatrix::RotationMatrix(double theta) : Matrix(2,2){
         a[0][0] = cos(theta);
         a[0][1] = -sin(theta);
