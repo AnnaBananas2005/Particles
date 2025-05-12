@@ -1,4 +1,3 @@
-
 #include "Engine.h"
 #include <SFML/Graphics.hpp>
 #include "Particle-2.h"
@@ -7,7 +6,6 @@ using namespace sf;
 using namespace std;
 
 //Done by Anna :3
-
 /*
 Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition)
 This constructor will be responsible for generating a randomized shape with numPoints vertices,
@@ -62,11 +60,13 @@ The algorithm is as follows:
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : m_A(2, numPoints) { //initialize m_A
     m_ttl = TTL;
     m_numPoints = numPoints;
-    float randomNumber = static_cast<float>(rand()) / (RAND_MAX);
-    m_radiansPerSec = randomNumber * PI;
+    float randomNumber = static_cast<float>(rand()) / (RAND_MAX);       
+    //m_radiansPerSec = randomNumber * PI;  //PROBLEM: randomNumber is float, and PI is double
+
+    m_radiansPerSec = static_cast<float>(randomNumber * PI);
 
     m_cartesianPlane.setCenter(0, 0);
-    m_cartesianPlane.setSize(target.getSize().x, -1.0 * target.getSize().y);
+    m_cartesianPlane.setSize(target.getSize().x, -1.0 * target.getSize().y);           
     m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);
 
     m_vx = rand() % 401 + 100; //Can be between whatever number (100-500)
@@ -81,9 +81,9 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
 
     for (int j = 0; j < numPoints; j++) {
         r = static_cast<float>(rand() % 21 + 20); //20-40 (61 + 20) for 20-80
-        dx = r * cos(theta);
-        dy = r * sin(theta);
-        m_A(0, j) = m_centerCoordinate.x + dx;
+        dx = static_cast<float>(r * cos(theta));            //PROBLEM, fixed to static: dx, dy & r is float, cos(theta)/sin(theta) returns double
+        dy = static_cast<float>(r * sin(theta));
+        m_A(0, j) = m_centerCoordinate.x + dx;      
         m_A(1, j) = m_centerCoordinate.y + dy;
         theta += dTheta;
     }
@@ -199,7 +199,7 @@ Shift our particle back to its original center:
 
 void Particle::rotate(double theta) {
     Vector2f temp = m_centerCoordinate;
-    translate(-temp.x, -temp.y);
+    translate(-temp.x, -temp.y);            
     RotationMatrix R(theta);
     m_A = R * m_A;
     translate(temp.x, temp.y);
