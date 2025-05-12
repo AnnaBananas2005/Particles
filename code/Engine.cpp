@@ -1,3 +1,4 @@
+
 #include "Engine.h"
 #include <SFML/Graphics.hpp>
 #include "Particle.h"
@@ -12,8 +13,22 @@ vector<Particle> m_particles;
 
 Engine::Engine()
 {
-    create(m_Window);
-    VideoMode::getDesktopMode(1980, 1080);
+
+    unsigned int screenWidth = VideoMode::getDesktopMode().width / 2;
+    unsigned int screenHeight = VideoMode::getDesktopMode().height / 2;
+
+    VertexArray vertices(Points);
+
+    RenderWindow window(VideoMode(screenWidth, screenHeight), "P A R T I C L E S");
+    ComplexPlane plane(screenWidth, screenHeight);
+
+    Font newFont;
+    newFont.loadFromFile("./ZillaSlab-Bold.ttf"); //put a new font
+    //mine is https://fonts.google.com/specimen/Roboto
+
+    Text newText("", newFont, 10);
+    newText.setFillColor(Color::White);
+    newText.setStyle(Text::Bold);
 }
 
 void Engine::run()
@@ -25,7 +40,7 @@ void Engine::run()
     p.unitTests();
     cout << "Unit tests complete.  Starting engine..." << endl;
 
-    while (m_Window.isOpen)
+    while (m_Window.isOpen())
     {
         Time time1 = clock.restart();
         float sec = time1.asSeconds();
@@ -73,11 +88,11 @@ void Engine::input()
 
 void Engine::update(float dtAsSeconds)
 {//Fix: m_particles is vector & not int, so cant use 'int i = 0'
-    for (size_t i = 0; i < m_particles;) //Fix: needs to have semi-colon, even if its not incremented
+    for (size_t i = 0; i < m_particles.size();) //Fix: needs to have semi-colon, even if its not incremented
     {
         if (m_particles[i].getTTL() > 0.0f)
         {
-            m_particles[i].update(dt);
+            m_particles[i].update(dtAsSeconds);
             i++;
         }
         else
