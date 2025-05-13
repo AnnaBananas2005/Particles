@@ -1,4 +1,3 @@
-
 #include "Engine.h"
 #include <SFML/Graphics.hpp>
 #include "Particle-2.h"
@@ -64,7 +63,7 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     m_numPoints = numPoints;
     float randomNumber = static_cast<float>(rand()) / (RAND_MAX);       
 
-    m_radiansPerSec = static_cast<float>(randomNumber * PI);
+    m_radiansPerSec = static_cast<float>(randomNumber * M_PI);
 
     m_cartesianPlane.setCenter(0, 0);
     m_cartesianPlane.setSize(target.getSize().x, -1.0 * target.getSize().y);           
@@ -76,8 +75,8 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     m_color1 = Color::White;
     m_color2 = Color(rand() % 256, rand() % 256, rand() % 256);
 
-    float theta = static_cast<float>(rand()) / RAND_MAX * (PI / 2);
-    float dTheta = 2 * PI / (numPoints - 1);
+    float theta = static_cast<float>(rand()) / RAND_MAX * (M_PI / 2);
+    float dTheta = 2 * M_PI / (numPoints - 1);
     float r, dx, dy;
 
     for (int j = 0; j < numPoints; j++) {
@@ -123,13 +122,14 @@ When the loop is finished, draw the VertexArray:
 
 void Particle::draw(RenderTarget& target, RenderStates states) const {
     VertexArray lines(TriangleFan, m_numPoints + 1);
-    Vector2f center = target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane);
-
+ 
+    Vector2f center(target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane));
     lines[0].position = center;
     lines[0].color = m_color1;
 
     for (int j = 1; j <= m_numPoints; j++) {
-        lines[j].position = target.mapCoordsToPixel(Vector2f(m_A(0, j - 1), m_A(1, j - 1)), m_cartesianPlane);
+        lines[j].position = static_cast<Vector2f>(target.mapCoordsToPixel(Vector2f(m_A(0, j - 1), m_A(1, j - 1)), m_cartesianPlane)); //static_cast
+
         lines[j].color = m_color2;
     }
     target.draw(lines, states);
@@ -177,7 +177,7 @@ Update the particle's center coordinate:
  */
 
 void Particle::translate(double xShift, double yShift) {
-    TranslationMatrix T(xShift, yShift);
+    TranslationMatrix T(xShift, yShift, m_A.getCols());
     m_A = m_A + T;
     m_centerCoordinate.x += static_cast<float>(xShift);
     m_centerCoordinate.y += static_cast<float>(yShift);
