@@ -55,7 +55,7 @@ void Engine::input()
 {
     Event event;
 
-    while (m_Window.pollEvent(event)) //fixed to m_Window (not m_window)
+    while (m_Window.pollEvent(event)) //Fixed: to m_Window (not m_window)
     {
         if (event.type == Event::Closed)
         {
@@ -71,9 +71,9 @@ void Engine::input()
                     int m_numPoints = rand() % 26 + 25;
                     //Particle particle(m_Window, m_numPoints, 
                     //particle.position = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
-                    Particle particle(m_Window, m_numPoints, { event.mouseButton.x, event.mouseButton.y }); //Reason
+                    Particle particle(m_Window, m_numPoints, { event.mouseButton.x, event.mouseButton.y }); 
 
-                    m_particles.push_back(particle); //from m_particle to m_particles, with an 's'
+                    m_particles.push_back(particle); //Fix: from m_particle to m_particles, with an 's'
 
                 }
             }
