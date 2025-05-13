@@ -20,6 +20,7 @@ Engine::Engine()
     VertexArray vertices(Points);
 
     RenderWindow window(VideoMode(screenWidth, screenHeight), "P A R T I C L E S");
+    ComplexPlane plane(screenWidth, screenHeight);
 
     Font newFont;
     newFont.loadFromFile("./ZillaSlab-Bold.ttf"); //put a new font
