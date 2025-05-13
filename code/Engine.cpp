@@ -1,7 +1,6 @@
-
 #include "Engine.h"
 #include <SFML/Graphics.hpp>
-#include "Particle-2.h"
+#include "Particle.h"
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 using namespace sf;
@@ -10,7 +9,7 @@ using namespace std;
 
 RenderWindow m_Window;
 vector<Particle> m_particles;
-
+//This part done by Anna
 Engine::Engine()
 {
 
@@ -19,7 +18,8 @@ Engine::Engine()
 
     VertexArray vertices(Points);
 
-    RenderWindow window(VideoMode(screenWidth, screenHeight), "P A R T I C L E S");
+    m_Window.create(VideoMode(screenWidth, screenHeight), "P A R T I C L E S"); //fixed
+
 
     Font newFont;
     newFont.loadFromFile("./ZillaSlab-Bold.ttf"); //put a new font
@@ -29,6 +29,7 @@ Engine::Engine()
     newText.setFillColor(Color::White);
     newText.setStyle(Text::Bold);
 }
+//End of Anna's contribution to this part
 
 void Engine::run()
 {
@@ -54,7 +55,7 @@ void Engine::input()
 {
     Event event;
 
-    while (m_Window.pollEvent(event)) //Fixed: to m_Window (not m_window)
+    while (m_Window.pollEvent(event)) //fixed to m_Window (not m_window)
     {
         if (event.type == Event::Closed)
         {
@@ -70,9 +71,9 @@ void Engine::input()
                     int m_numPoints = rand() % 26 + 25;
                     //Particle particle(m_Window, m_numPoints, 
                     //particle.position = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
-                    Particle particle(m_Window, m_numPoints, { event.mouseButton.x, event.mouseButton.y }); 
+                    Particle particle(m_Window, m_numPoints, { event.mouseButton.x, event.mouseButton.y }); //Reason
 
-                    m_particles.push_back(particle); //Fix: from m_particle to m_particles, with an 's'
+                    m_particles.push_back(particle); //from m_particle to m_particles, with an 's'
 
                 }
             }
