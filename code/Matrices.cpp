@@ -115,7 +115,7 @@ namespace Matrices
         a[1][0] = 0.0;     
         a[1][1] = scale;
     }
-    TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols) : Matrix(2,2){
+    TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols) : Matrix(2,nCols){ //Fixed: changed 2 to nCols
         for (int i = 0; i < nCols; i++){
             a[0][i] = xShift;
             a[1][i] = yShift;
