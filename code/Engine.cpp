@@ -69,9 +69,7 @@ void Engine::input()
                 for (int i = 0; i < 5; i++)
                 {
                     int m_numPoints = rand() % 26 + 25;
-                    //Particle particle(m_Window, m_numPoints, 
-                    //particle.position = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
-                    Particle particle(m_Window, m_numPoints, { event.mouseButton.x, event.mouseButton.y }); //Reason
+                    Particle particle(m_Window, m_numPoints, { event.mouseButton.x, event.mouseButton.y }); 
 
                     m_particles.push_back(particle); //from m_particle to m_particles, with an 's'
 
