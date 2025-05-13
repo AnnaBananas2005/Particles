@@ -1,3 +1,4 @@
+
 #include "Engine.h"
 #include <SFML/Graphics.hpp>
 #include "Particle-2.h"
@@ -6,6 +7,7 @@ using namespace sf;
 using namespace std;
 
 //Done by Anna :3
+
 /*
 Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition)
 This constructor will be responsible for generating a randomized shape with numPoints vertices,
@@ -61,7 +63,6 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     m_ttl = TTL;
     m_numPoints = numPoints;
     float randomNumber = static_cast<float>(rand()) / (RAND_MAX);       
-    //m_radiansPerSec = randomNumber * PI;  //PROBLEM: randomNumber is float, and PI is double
 
     m_radiansPerSec = static_cast<float>(randomNumber * PI);
 
@@ -177,7 +178,7 @@ Update the particle's center coordinate:
 
 void Particle::translate(double xShift, double yShift) {
     TranslationMatrix T(xShift, yShift);
-    T += m_A;
+    m_A = m_A + T;
     m_centerCoordinate.x += static_cast<float>(xShift);
     m_centerCoordinate.y += static_cast<float>(yShift);
 }
