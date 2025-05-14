@@ -16,8 +16,6 @@ Engine::Engine()
     unsigned int screenWidth = VideoMode::getDesktopMode().width / 2;
     unsigned int screenHeight = VideoMode::getDesktopMode().height / 2;
 
-    VertexArray vertices(Points); //Probably delete this (isnt so necessary)
-
     m_Window.create(VideoMode(screenWidth, screenHeight), "P A R T I C L E S"); //fixed
 
 
