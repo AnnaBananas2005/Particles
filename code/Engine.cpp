@@ -18,14 +18,6 @@ Engine::Engine()
 
     m_Window.create(VideoMode(screenWidth, screenHeight), "P A R T I C L E S"); //fixed
 
-
-    Font newFont;
-    newFont.loadFromFile("./ZillaSlab-Bold.ttf"); //put a new font
-    //mine is https://fonts.google.com/specimen/Roboto
-
-    Text newText("", newFont, 10);
-    newText.setFillColor(Color::White);
-    newText.setStyle(Text::Bold);
 }
 //End of Anna's contribution to this part
 
