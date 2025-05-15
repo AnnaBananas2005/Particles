@@ -1,7 +1,8 @@
 #pragma once
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Particle-2.h"
+#include <SFML/Audio.hpp>
+#include "Particle.h"
 using namespace sf;
 using namespace std;
 
@@ -13,7 +14,10 @@ private:
 
 	//vector for Particles
 	vector<Particle> m_particles;
-
+	Texture texture;
+	Sprite yippe;
+	SoundBuffer buffer;
+	Sound yippee;
 	// Private functions for internal use only
 	void input();
 	void update(float dtAsSeconds);
